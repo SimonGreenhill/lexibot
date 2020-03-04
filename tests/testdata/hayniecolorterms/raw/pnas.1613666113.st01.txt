@@ -1,0 +1,2 @@
+	black	white	red	yellow	green	blue	brown	grey	orange
+Ngunawal	buru-buraa	daguru-gurag	dhirrum dhirrum						
