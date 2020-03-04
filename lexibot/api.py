@@ -6,6 +6,10 @@ from pathlib import Path
 
 import git
 
+# TODO: it would be nice to run these commands directly on the dataset
+# rather than shelling out with subprocess, but I can't see how to 
+# run inside a venv otherwise. 
+
 
 class Lexibot:
     def __init__(self, path):
@@ -66,6 +70,8 @@ class Lexibot:
         
     def update_repository(self):
         """Update git repository"""
+        # TODO how to write tests for this?
+        
         # if not a git repository, skip
         if not self.repo:
             return
@@ -84,7 +90,8 @@ class Lexibot:
             self.log.info('Current git hash is outdated %s < %s -- setting dirty' % (current, incoming))
             self.dirty = True
             self.repo.remotes.origin.pull()
-    
+        
+        
     def install_virtualenv(self):
         if not self.virtualenv.exists():
             self.log.info('creating virtualenv in %s' % self.virtualenv)
@@ -103,19 +110,20 @@ class Lexibot:
         )
         
         # TODO: how to check that we have the latest pacakges?
-        self.dirty = True
-        
+        # TODO: do we need to check for updates to core packages
         
     def make_cldf(self):
         """Make the CLDF dataset"""
         self.log.debug('running make_cldf')
+        # TODO specify glottolog and concepticon versions explicitly?
         p = subprocess.run(
             ["cldfbench", "lexibank.makecldf", self.id],
-            # TODO specify glottolog and concepticon versions explicitly?
             check=True, capture_output=True,
             cwd=self.path, env=self.get_env_vars()
         )
         if p.stderr:
+            # TODO: cldfbench adds ANSI codes. Remove these from the result or
+            # get cldfbench to not add ANSI with a --computer-readable flag? 
             return p.stderr.decode('utf8').split("\n")
         return
         
@@ -144,9 +152,11 @@ class Lexibot:
         return
 
     def compare_cldf(self):
+        # TODO: how? git diff?
         pass
     
     def notify(self, invalids, differences, warnings):
         for error in (invalids, differences, warnings):
             print(error)
+        # TODO: what do we want here? a github PR? or just outputting warnings for now?
         

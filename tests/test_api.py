@@ -2,7 +2,6 @@ import pytest
 from lexibot.api import Lexibot
 
 def test_id(testbot):
-   # note using temp dir which appends 0..n to dirname
    assert testbot.id.startswith('hayniecolorterms')
 
 
